@@ -16,8 +16,9 @@ function onCreatePromise(event) {
   const userAmount = amount.value;
    for (let i = 1; i <= userAmount; i++) {
      createPromise(i, userDelay)
-       .then(onSuccess => { Notify.success(onSuccess); })
-       .catch(onError => { Notify.failure(onError); });     
+       .then(({ position, delay } )=> { Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`); })
+       .catch(({ position, delay }) => { Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`); });
+     
      userDelay += userStep;   
    }
   event.currentTarget.reset();
@@ -28,11 +29,13 @@ function createPromise(position, delay) {
   return new Promise((resolve, reject) => {
      setTimeout(() => {
       if (shouldResolve) {
-        resolve(`✅ Fulfilled promise ${position} in ${delay}ms`); 
+        resolve({ position, delay });
+ 
       } else {
-        reject(`❌ Rejected promise ${position} in ${delay}ms`);
+        reject({ position, delay });
       }
     }, delay);
   });
 }
 
+ 
