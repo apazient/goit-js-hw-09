@@ -17,8 +17,7 @@ function onCreatePromise(event) {
    for (let i = 1; i <= userAmount; i++) {
      createPromise(i, userDelay)
        .then(onSuccess => { Notify.success(onSuccess); })
-       .catch(onError => { Notify.failure(onError); });
-     
+       .catch(onError => { Notify.failure(onError); });     
      userDelay += userStep;   
    }
   event.currentTarget.reset();
@@ -29,8 +28,7 @@ function createPromise(position, delay) {
   return new Promise((resolve, reject) => {
      setTimeout(() => {
       if (shouldResolve) {
-        resolve(`✅ Fulfilled promise ${position} in ${delay}ms`);
- 
+        resolve(`✅ Fulfilled promise ${position} in ${delay}ms`); 
       } else {
         reject(`❌ Rejected promise ${position} in ${delay}ms`);
       }
