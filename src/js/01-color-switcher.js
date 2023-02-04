@@ -1,5 +1,5 @@
 
-refs = {
+const refs = {
     startBtn: document.querySelector(`[data-start]`),
     body: document.querySelector(`body`),
     stopBtn: document.querySelector(`[data-stop]`),
