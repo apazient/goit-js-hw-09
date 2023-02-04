@@ -4,17 +4,32 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 require('flatpickr/dist/themes/material_blue.css');
 
-let SELECTED_DATE = null;
 const refs = {
   counterBtn: document.querySelector(`[data-start]`),
   dataInput: document.querySelector(`#datetime-picker`),
+  timer: document.querySelector((".timer")),
+  
+
   day: document.querySelector(`[data-days]`),
   hour: document.querySelector(`[data-hours]`),
   min: document.querySelector(`[data-minutes]`),
   sec: document.querySelector(`[data-seconds]`),
+
 };
 
-const flat = flatpickr(refs.dataInput, {
+refs.counterBtn.disabled = true;
+let userDate = null;
+
+
+
+
+refs.counterBtn.addEventListener(`click`, () => {
+  runTimer.startTimer();
+});
+
+
+
+const options = {
   require: true,
   enableTime: true,
   time_24hr: true,
@@ -22,24 +37,62 @@ const flat = flatpickr(refs.dataInput, {
   minuteIncrement: 1,
   dateFormat: 'Y-m-d H:i',
   position: 'auto end',
-  onClose([selectedDates]) {
-      console.dir(selectedDates);
-      console.log(selectedDates.getFullYear())
-      console.log(selectedDates.getDate())
-        console.log(selectedDates.getMonth())
-      console.log(selectedDates.getHours())
-    
-      console.log(selectedDates.getSeconds())
-    if (selectedDates > Date.now()) {
+  onClose(selectedDates) {
+    if (selectedDates[0] > Date.now()) {
       refs.counterBtn.disabled = false;
+      userDate = selectedDates[0];
+      const counterDate = userDate - Date.now();
+      const outputDate = convertMs(counterDate);
+
+      refs.day.textContent = pad(outputDate.days);
+      refs.hour.textContent = pad(outputDate.hours);
+      refs.min.textContent = pad(outputDate.minutes);
+      refs.sec.textContent = pad(outputDate.seconds);
+
       return;
     }
     refs.counterBtn.disabled = true;
     alert('Please choose a date in the future');
   },
-});
-SELECTED_DATE = flat.days;
-console.log('selDAtes', SELECTED_DATE);
+};
+
+flatpickr(refs.dataInput, options);
+class Timer {
+  constructor() {
+    this.isActive = false;
+    this.intervalId = null;
+  }
+  startTimer() {
+    if (this.isActive) {
+      if (!refs.counterBtn.disabled) {
+        refs.counterBtn.disabled = true;
+      }
+      return;
+    }
+
+    this.isActive = true;
+    refs.counterBtn.disabled = true;
+    console.log(this.isActive);
+    this.intervalId = setInterval(() => {
+      const difTime = userDate - Date.now();
+      const convertTime = convertMs(difTime);
+      refs.day.textContent = pad(convertTime.days);
+      refs.hour.textContent = pad(convertTime.hours);
+      refs.min.textContent = pad(convertTime.minutes);
+      refs.sec.textContent = pad(convertTime.seconds);
+      console.log(difTime);
+      if (difTime <= 0) {
+        this.stopTimer();
+      }
+    }, 1000);
+  }
+  stopTimer() {
+    clearInterval(this.intervalId);
+  }
+}
+
+const runTimer = new Timer();
+
 // console.log(se)
 // console.log(flat)
 // console.dir(flatpickr)

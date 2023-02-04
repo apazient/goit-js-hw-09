@@ -16,3 +16,12 @@ img {
   display: block;
   max-width: 100%;
 }
+
+.timer {
+  font-size: 24px;
+  display: flex;
+  gap:5px;
+  padding: 10px 10px 10px 10px;
+  font-weight: bold;
+  color:cornflowerblue;
+}
